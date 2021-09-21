@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<div class="text-center">
+    <h1 style="background-color: #05896f">Users table</h1>
+</div>
+<body style="background-color: #91e0a8">
+<div class="d-flex" >
+    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#addUser">add new user</button>
+
+    <br>
+    <div style="padding-left: 40px">
+        <button class="btn btn-outline-primary"><a href="/api/user">User table</a></button>
+    </div>
+    <br>
+    <div style="padding-left: 40px">
+        <button class="btn btn-outline-primary" ><a href="/api/admin">Admin table</a></button>
+    </div>
+    <div style="padding-left: 40px">
+        <button class="btn btn-outline-light"><a href="/logout">log out</a></button>
+    </div>
+</div>
+
+<div class="container">
+    <table id="users_table" class="table table-hover table-striped">
+    </table>
+</div>
+
+<!--//POST Method:-->
+<!--Modal-->
+<div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="#addUserLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserLabel">Form</h5>
+                <button class="btn close" data-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="register" method="post" >
+                    <div class="form-group" align="center">
+                        <label for="name">Name</label>
+                        <br>
+                        <input type="text" class="control-input col-sm-10" id="name" placeholder="Name">
+                    </div>
+
+                    <div class="form-group" align="center">
+                        <label for="name">Surname</label>
+                        <br>
+                        <input type="text" class="control-input col-sm-10" id="surname" placeholder="Surname">
+                    </div>
+
+                    <div class="form-group" align="center">
+                        <label for="name">Gender</label>
+                        <br>
+                        <input type="text" class="control-input col-sm-10" id="gender" placeholder="Gender">
+                    </div>
+
+                    <div class="form-group" align="center">
+                        <label for="name">email</label>
+                        <br>
+                        <input type="email" class="control-input col-sm-10" id="email" placeholder="Email">
+                    </div>
+                    <div class="form-group" align="center">
+                        <label for="password">Password</label>
+                        <br>
+                        <input type="password" class="control-input col-sm-10" id="password" placeholder="Password">
+                    </div>
+                    <div class="form-group" align="center">
+                        <label   for="age">Age</label>
+                        <br>
+                        <input type="number" class="control-input col-sm-10"id="age" placeholder="age">
+                    </div>
+                    <div class="form-group" align="center">
+                    </div>
+                    <!--                    <a href="#" class="card-link">Edit</a>-->
+                    <!--                    <a href="#" class="card-link">Delete</a>-->
+                    <!--                    <div class="form-group" align="center">-->
+                    <!--                        <input type="submit" value="add User">-->
+                    <!--                    </div>-->
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-outline-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal-->
+<!--//Put method:-->
+<!--Modal-->
+<!--aria-labelledby="#updateUserLabel"-->
+<!--aria-hidden="true"-->
+<div class="modal fade" id="UpdateUser" tabindex="-1"  >
+    <!--     <div id="EditUserTest">-->
+    <!--         edit-->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserLabel">Form</h5>
+                <button class="btn close" data-dismiss="modal" aria-label="close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="EditUserTest">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--     </div>-->
+</div>
+<!--<script src="JS.js"></script>-->
+<script>
+    //post method:
+    const admin = document.getElementById('register')
+    let url = 'http://localhost:8000/api/users'
+    admin.addEventListener('submit', function (event) {
+        event.preventDefault();
+        let name = document.getElementById('name').value;
+        let surname = document.getElementById('surname').value;
+        let gender = document.getElementById('gender').value;
+        let email = document.getElementById('email').value;
+        let password = document.getElementById('password').value;
+        let age = document.getElementById('age').value;
+        console.log(surname)
+        console.log(password)
+        console.log(email)
+        console.log(name)
+        console.log(surname)
+        console.log(email)
+        console.log(password)
+        console.log(age)
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                surname: surname,
+                gender: gender,
+                email: email,
+                password: password,
+                age: age,
+            })
+        }).then(function (response) {
+            return response.json()
+        }).then(function (data) {
+            console.log(data)
+        })
+        setTimeout(test,300);
+        function test() {
+            document.location.href = 'http://localhost:8000/api/admin'
+        }
+    });
+
+
+    //Delete method:
+    const table = document.querySelector('table');
+    table.addEventListener('click', (e) => {
+        e.preventDefault()
+        let deleteButton = e.target.id === 'delete-post';
+        let userId = e.target.parentElement.dataset.id;
+        if (deleteButton) {
+            fetch(`${url}/${userId}`, {
+                method: 'DELETE',
+            })
+                .then(res => res.text())
+                .then(() => location.reload())
+        }
+    });
+    //Update method:
+    // const adminEdit = document.getElementById('registerEdit')
+    // let url = 'http://localhost:8000/api/users'
+    //
+    // adminEdit.addEventListener('submit', function (event) {
+    //     event.preventDefault();
+    //     let name = document.getElementById('name').value;
+    //     let password = document.getElementById('password').value;
+    //     let age = document.getElementById('age').value;
+    //     console.log(name)
+    //     console.log(password)
+    //     console.log(age)
+    //     fetch(url, {
+    //         method: "PUT",
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             name: name,
+    //             password: password,
+    //             age: age,
+    //         })
+    //     }).then(function (response) {
+    //         return response.json()
+    //     }).then(function (data) {
+    //         console.log(data)
+    //     })
+    //     setTimeout(test,300);
+    //     function test() {
+    //         document.location.href = 'index1.html'
+    //
+    //     }
+    // });
+    async function getAllUsers() {
+        let response = await fetch('http://localhost:8000/api/users')
+        let content = await response.json()
+            .then(users => {
+                let li = `
+            <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Surname</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Email</th>
+            <th scope="col">Password</th>
+            <th scope="col">Age</th>
+            <th scope="col">Role</th>
+2 q            <th style="color: #530606" scope="col">Delete</th>
+            </tr>`
+                users.forEach(u => {
+                    let userRole='';
+                    for (let i=0; i<u.roles.length; i++){
+                        userRole+=u.roles[i].role
+                    }
+                    li += `<tr>
+                <td>${u.id}</td>
+                <td>${u.name}</td>
+                <td>${u.surname}</td>
+                <td>${u.gender}</td>
+                <td>${u.email}</td>
+                <td>${u.password}</td>
+                <td>${u.age}</td>
+                <td>${userRole}</td>
+                <td><button class="btn btn-outline-success" data-toggle="modal" data-target="#UpdateUser"
+                onclick="updates(${u.id},'${u.name}', '${u.surname}', '${u.gender}', '${u.email}','${u.password}','${u.age}')"
+                >Update</button></td>
+                <td> <button  data-id="${u.id}" class="btn btn-outline-danger"><a href="#" id="delete-post">Delete</a></button></td>
+
+            </tr>`
+                });
+                document.getElementById("users_table").innerHTML = li;
+            })
+    }
+    getAllUsers()
+
+    // onclick="updateUser2(${u.id},${u.name},${u.password},${u.age})"
+    function updates(id,name, surname, gender, email, password,age) {
+        let ht = `                 <form id="registerEdit" >
+                     <div class="form-group" align="center">
+                         <label for="name">Name</label>
+                         <br>
+                         <input type="text" class="control-input col-sm-10" id="nameEdit" value="${name}">
+                     </div>
+                      <div class="form-group" align="center">
+                         <label for="name">Surname</label>
+                         <br>
+                         <input type="text" class="control-input col-sm-10" id="surnameEdit" value="${surname}">
+                     </div>
+                      <div class="form-group" align="center">
+                         <label for="name">Gender</label>
+                         <br>
+                         <input type="text" class="control-input col-sm-10" id="genderEdit" value="${gender}">
+                     </div>
+                      <div class="form-group" align="center">
+                         <label for="name">Email</label>
+                         <br>
+                         <input type="email" class="control-input col-sm-10" id="emailEdit" value="${email}">
+                     </div>
+                     <div class="form-group" align="center">
+                         <label for="password">Password</label>
+                         <br>
+                         <input type="password" class="control-input col-sm-10" id="passwordEdit" value="${password}">
+                     </div>
+                     <div class="form-group" align="center">
+                         <label   for="age">Age</label>
+                         <br>
+                         <input type="number" class="control-input col-sm-10"id="ageEdit" value="${age}">
+                     </div>
+                     <div class="form-group" align="center">
+                     </div>
+ </div>
+
+        //              <!--                    <a href="#" class="card-link">Edit</a>-->
+        //              <!--                    <a href="#" class="card-link">Delete</a>-->
+        //              <!--                    <div class="form-group" align="center">-->
+        //     <!--                        <input type="submit" value="add User">-->
+        // <!--                    </div>-->
+        // <div class="modal-footer">
+        // <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+        // <button class="btn btn-outline-success" type="submit">Edit</button>
+        // </div>
+        // </form>
+        // `;
+        document.getElementById("EditUserTest").innerHTML = ht;
+        const editForm = document.getElementById('registerEdit');
+        editForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        let nameE = document.getElementById('nameEdit').value;
+        let surnameE = document.getElementById('surnameEdit').value;
+        let genderE = document.getElementById('genderEdit').value;
+        let emailE = document.getElementById('emailEdit').value;
+        let passwordE = document.getElementById('passwordEdit').value;
+        let ageE = document.getElementById('ageEdit').value;
+
+        fetch(url+`/${id}`, {
+        method: "PUT",
+        headers: {
+        'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+        name: nameE,
+        surname: surnameE,
+        gender: genderE,
+        email: emailE,
+        password: passwordE,
+        age: ageE,
+        })
+        }).then(function (response) {
+        return response.json()
+        }).then(function (data) {
+        console.log(data)
+        })
+        setTimeout(test,300);
+        function test() {
+        document.location.href = 'http://localhost:8000/api/admin'
+        }
+        })
+        }
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
